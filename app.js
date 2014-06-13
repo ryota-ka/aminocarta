@@ -47,17 +47,19 @@ io.sockets.on('connection', function(socket) {
 
 
 var App = new function() {
+  this.playerRoomMap = [];
   this.GameHandler = new function() {
     this.games = [];
 
     this.createNewGame = function(sessionId) {
-      var roomNumber = 0; // @todo generate properly
+      var roomNumber = 1; // @todo generate properly
       this.games[roomNumber] = new Game(roomNumber, {sessionId});
     };
 
     this.addPlayerToGame = function(roomNumber, sessionId){
       if (!rooms[roomNumber].isPlaying) {
         io.sockets.socket(sessionId).emit('entered-room', {roomNumber: roomNumber});
+        App.playerRoomMap[sessionId] = roomNumber;
       }
     };
   }
@@ -67,10 +69,12 @@ var App = new function() {
 
     this.addPlayer = function(sessionId) {
       this.players[sessionId] = new Player(sessionId);
+      App.playerRoomMap[sessionId] = 0;
     };
 
     this.removePlayer(sessionId) {
       delete this.players[sessionId];
+      delete App.playerRoomMap[sessionId];
     };
 
     this.getNameBySessionId = function(sessionId) {
