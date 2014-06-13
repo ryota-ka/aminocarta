@@ -45,6 +45,68 @@ io.sockets.on('connection', function(socket) {
   });
 });
 
+
+var Game = function(roomNumber, sessionIds) {
+  this.sessionIds = sessionIds;
+  this.currentQuizIndex;
+  this.roomNumber = roomNumber;
+
+  var aminoacids = [
+    'グリシン',
+    'アラニン',
+    'バリン',
+    'ロイシン',
+    'イソロイシン',
+    'セリン',
+    'トレオニン',
+    'プロリン',
+    'アスパラギン酸',
+    'グルタミン酸',
+    'アスパラギン',
+    'グルタミン',
+    'リジン',
+    'アルギニン',
+    'システイン',
+    'メチオニン',
+    'ヒスチジン',
+    'フェニールアラニン',
+    'チロシン',
+    'トリプトファン'
+  ];
+  this.aminoIndices = [];
+  this.aminoIndicesOrig = [];
+  var tmp = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19];
+  var num;
+  for (var i = 0; i < 20; i++) {
+    num = tmp[Math.floor(Math.random() * tmp.length)];
+    this.aminoIndices.push(num);
+    this.aminoIndicesOrig.push(num)
+    tmp.splice(num, 1);
+  }
+}
+
+Game.prototype.giveNewQuiz = function() {
+  var index = Math.floor(Math.random() * this.aminoIndices.length);
+  aminoIndices.splice(index, 1);
+  this.currentIndex = index;
+  io.sockets.emit('newquiz', {string: this.aminoacids[index]});
+}
+
+Game.prototype.checkAnswer = function(index) {
+  if (index === this.currentQuizIndex) {
+    // スコア追加
+  } else {
+    // お手つき処理
+    this.aminoIndices.push(this.currentQuizIndex);
+  }
+  if (this.aminoIndices.length === 0) {
+    // ゲーム終了
+  } else {
+    // 新しい問題を出題
+  }
+}
+
+
 Player = function(sessionId) {
   this.sessionId = sessionid;
   this.name = 'Guest ' + ('00000' + Math.floor(Math.random() * 100000)).slice(-5);
