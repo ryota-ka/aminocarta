@@ -34,7 +34,7 @@ var server = http.createServer(function(req, res) {
 var io = socketio.listen(server);
 
 io.sockets.on('connection', function(socket) {
-  console.log('client connected');
+  console.log('client connected : ' + socket.id);
 
   socket.on('disconnect', function() {
     console.log('client disconnected');
@@ -44,6 +44,43 @@ io.sockets.on('connection', function(socket) {
     console.log('clicked-carta message received');
   });
 });
+
+
+var GameHandler = new function() {
+  this.games = [];
+
+  this.createNewGame = function(sessionId) {
+    var roomNumber = 0; // @todo generate properly
+    this.games[roomNumber] = new Game(roomNumber, {sessionId});
+  };
+
+  this.addPlayerToGame = function(roomNumber, sessionId){
+    if (!rooms[roomNumber].isPlaying) {
+      io.sockets.socket(sessionId).emit('entered-room', {roomNumber: roomNumber});
+    }
+  }
+}
+
+
+var PlayerHandler = new function() {
+  this.players = [];
+
+  this.addPlayer = function(sessionId) {
+    this.players[sessionId] = new Player(sessionId);
+  }
+
+  this.removePlayer(sessionId) {
+    delete this.players[sessionId];
+  }
+
+  this.getNameBySessionId = function(sessionId) {
+    if (typeof this.players[sessionId] !== 'undefined') {
+      return false;
+    } else {
+      return this.players[sessionId].name;
+    }
+  };
+}
 
 
 var Game = function(roomNumber, sessionIds) {
