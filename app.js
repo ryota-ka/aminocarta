@@ -45,6 +45,43 @@ io.sockets.on('connection', function(socket) {
   });
 });
 
+
+var Game = function(sessionIds) {
+  this.sessionIds = sessionIds;
+
+  var aminoacids = [
+    'グリシン',
+    'アラニン',
+    'バリン',
+    'ロイシン',
+    'イソロイシン',
+    'セリン',
+    'トレオニン',
+    'プロリン',
+    'アスパラギン酸',
+    'グルタミン酸',
+    'アスパラギン',
+    'グルタミン',
+    'リジン',
+    'アルギニン',
+    'システイン',
+    'メチオニン',
+    'ヒスチジン',
+    'フェニールアラニン',
+    'チロシン',
+    'トリプトファン'
+  ];
+  var aminoIndices = [];
+  var tmp = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19];
+  var num;
+  for (var i = 0; i < 20; i++) {
+    num = tmp[Math.floor(Math.random() * tmp.length)];
+    aminoIndices.push(num);
+    tmp.splice(num, 1);
+  }
+}
+
+
 Player = function(sessionId) {
   this.sessionId = sessionid;
   this.name = 'Guest ' + ('00000' + Math.floor(Math.random() * 100000)).slice(-5);
