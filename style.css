@@ -1,0 +1,40 @@
+html, body {
+  height: 100%;
+}
+
+body {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+#info {
+  width: 100%;
+  height: 100px;
+}
+
+#cartawrapper {
+  position: relative;
+  margin: 0 auto;
+}
+
+#cartawrapper::before {
+  content: '';
+  display: block;
+  padding-top: 55%;
+}
+
+.carta {
+  position: absolute;
+  width: 15%;
+  border-width: 1px;
+  border-style: solid;
+  border-color: #444;
+}
+
+.carta::before {
+  content: '';
+  display: block;
+  padding-top: 80%;
+}
