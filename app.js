@@ -53,12 +53,12 @@ var App = new function() {
 
     this.createNewGame = function(sessionId) {
       var roomNumber = 1; // @todo generate properly
-      this.games[roomNumber] = new Game(roomNumber, {sessionId});
+      this.games[roomNumber] = new Game(roomNumber, [sessionId]);
     };
 
     this.addPlayerToGame = function(roomNumber, sessionId){
       if (!rooms[roomNumber].isPlaying) {
-        io.sockets.socket(sessionId).emit('entered-room', {roomNumber: roomNumber});
+        App.PlayerHandler.players[sessionId].sendToMe('entered-room', roomNumber);
         App.playerRoomMap[sessionId] = roomNumber;
       }
     };
@@ -72,7 +72,7 @@ var App = new function() {
       App.playerRoomMap[sessionId] = 0;
     };
 
-    this.removePlayer(sessionId) {
+    this.removePlayer = function(sessionId) {
       delete this.players[sessionId];
       delete App.playerRoomMap[sessionId];
     };
