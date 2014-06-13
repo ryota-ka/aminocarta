@@ -44,3 +44,31 @@ io.sockets.on('connection', function(socket) {
     console.log('clicked-carta message received');
   });
 });
+
+Player = function(sessionId) {
+  this.sessionId = sessionid;
+  this.name = 'Guest ' + ('00000' + Math.floor(Math.random() * 100000)).slice(-5);
+  this.score = 0;
+  this.gainedCartaIds = [];
+  this.isSkipped = false;
+};
+
+Player.prototype.changeName = function(name) {
+  return this.name = name;
+}
+
+Player.prototype.addScore = function() {
+  return this.score++;
+}
+
+Player.prototype.resetScore = function() {
+  return this.score = 0;
+}
+
+Player.prototype.setSkipped = function() {
+  return this.isSkipped = true;
+}
+
+Player.prototype.unsetSkipped = function() {
+  return this.isSkipped = false;
+}
