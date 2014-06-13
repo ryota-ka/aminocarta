@@ -46,40 +46,45 @@ io.sockets.on('connection', function(socket) {
 });
 
 
-var GameHandler = new function() {
-  this.games = [];
+var App = new function() {
+  this.playerRoomMap = [];
+  this.GameHandler = new function() {
+    this.games = [];
 
-  this.createNewGame = function(sessionId) {
-    var roomNumber = 0; // @todo generate properly
-    this.games[roomNumber] = new Game(roomNumber, {sessionId});
-  };
+    this.createNewGame = function(sessionId) {
+      var roomNumber = 1; // @todo generate properly
+      this.games[roomNumber] = new Game(roomNumber, {sessionId});
+    };
 
-  this.addPlayerToGame = function(roomNumber, sessionId){
-    if (!rooms[roomNumber].isPlaying) {
-      io.sockets.socket(sessionId).emit('entered-room', {roomNumber: roomNumber});
-    }
-  }
-}
-
-
-var PlayerHandler = new function() {
-  this.players = [];
-
-  this.addPlayer = function(sessionId) {
-    this.players[sessionId] = new Player(sessionId);
+    this.addPlayerToGame = function(roomNumber, sessionId){
+      if (!rooms[roomNumber].isPlaying) {
+        io.sockets.socket(sessionId).emit('entered-room', {roomNumber: roomNumber});
+        App.playerRoomMap[sessionId] = roomNumber;
+      }
+    };
   }
 
-  this.removePlayer(sessionId) {
-    delete this.players[sessionId];
-  }
+  this.PlayerHandler = new function() {
+    this.players = [];
 
-  this.getNameBySessionId = function(sessionId) {
-    if (typeof this.players[sessionId] !== 'undefined') {
-      return false;
-    } else {
-      return this.players[sessionId].name;
-    }
-  };
+    this.addPlayer = function(sessionId) {
+      this.players[sessionId] = new Player(sessionId);
+      App.playerRoomMap[sessionId] = 0;
+    };
+
+    this.removePlayer(sessionId) {
+      delete this.players[sessionId];
+      delete App.playerRoomMap[sessionId];
+    };
+
+    this.getNameBySessionId = function(sessionId) {
+      if (typeof this.players[sessionId] !== 'undefined') {
+        return false;
+      } else {
+        return this.players[sessionId].name;
+      }
+    };
+  }
 }
 
 
