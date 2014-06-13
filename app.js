@@ -39,4 +39,8 @@ io.sockets.on('connection', function(socket) {
   socket.on('disconnect', function() {
     console.log('client disconnected');
   });
+
+  socket.on('clicked-carta', function() {
+    console.log('clicked-carta message received');
+  });
 });
